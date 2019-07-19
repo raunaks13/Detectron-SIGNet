@@ -1,3 +1,37 @@
+# Detectron for SIGNet
+
+In SIGNet, instance masks need to be generated in '.raw' format in order to be parsed for use in training depth, pose, and rigid flow. For more information about formatting, check the `README.md` file in the [carla-SIGNet](https://github.com/raunaks13/carla-SIGNet/) repository.
+
+We compute the instance masks using a modified version of Facebook AI Research's Detectron.
+
+This repository contains the modified code in order to generate these instance masks. Note that the masks need to be generated for sequences of 3 images (that are concatenated into one image) during training, and for singular images during testing.
+
+Specifically, look at the `infer_simple-eigen` script in the `tools` folder, and the `vis-raw` file in the `detectron/utils` folder.
+
+## Running
+
+It is easiest to build Detectron from it's docker image in case you do not have Caffe2 installed and running already with the right CUDA version (please see [`INSTALL.md`](INSTALL.md).
+
+Create a folder called `models` and place the Mask-RCNN model inside it: https://drive.google.com/open?id=1fvfVgZLND9MT_6jaSXcKvNVirR4reexk
+
+Example running command:
+
+```
+python tools/infer_simple-eigen.py \
+    --cfg configs/12_2017_baselines/e2e_mask_rcnn_R-101-FPN_2x.yaml \
+   --output-dir /dir/to/store/results/ \
+   --image-ext png \
+   --output-ext png \
+   --wts models/mask_rcnn_R-101-FPN_2x.pkl \
+   --kitti_eigen_file /path/to/list/of/images.txt \
+   demo/kitti
+```
+
+Review the `infer_simple-*` files for further clarifications.
+
+
+Below, you can find the original `README.md` content of the [original Detectron repository](https://github.com/facebookresearch/Detectron). Please review it in case of troubleshooting issues with the platform.
+
 # Detectron
 
 Detectron is Facebook AI Research's software system that implements state-of-the-art object detection algorithms, including [Mask R-CNN](https://arxiv.org/abs/1703.06870). It is written in Python and powered by the [Caffe2](https://github.com/caffe2/caffe2) deep learning framework.
